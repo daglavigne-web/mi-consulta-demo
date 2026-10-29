@@ -65,7 +65,7 @@ const examples = [
 const $ = id => document.getElementById(id);
 let records = loadRecords();
 let pendingImport = [];
-function validRecord(r){return r && /^DEMO-\d{3,}$/.test(String(r.id||"").trim().toUpperCase()) && typeof r.name==="string" && r.name.trim() && typeof r.address==="string" && r.address.trim();}
+function validRecord(r){return r && String(r.id||"").trim() && typeof r.name==="string" && r.name.trim() && typeof r.address==="string" && r.address.trim();}
 function cleanRecord(r){return {name:String(r.name).trim(),id:String(r.id).trim().toUpperCase(),address:String(r.address).trim(),status:"Ejemplo"};}
 function loadRecords(){
  try{
