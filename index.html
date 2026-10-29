@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi Consulta — Prototipo</title>
+<style>
+:root{--bg:#070b14;--panel:#0d1423;--panel2:#111c30;--line:#22324d;--blue:#318bff;--cyan:#5ee7ff;--text:#edf4ff;--muted:#91a3bf;--good:#45d6a2;--warn:#ffca6a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#12305a 0,transparent 38%),radial-gradient(ellipse at 95% 10%,#0c2a3c 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+ [hidden]{display:none!important}
+button,input,select{font:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.side{background:rgba(7,12,23,.86);border-right:1px solid var(--line);padding:26px 17px;display:flex;flex-direction:column;gap:28px}.brand{display:flex;gap:12px;align-items:center;padding:0 8px}.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,var(--blue),#1452c4);display:grid;place-items:center;box-shadow:0 0 26px #318bff44}.logo svg{width:24px}.brand strong{display:block;font-size:18px;letter-spacing:.2px}.brand small{color:var(--muted);font-size:11px;letter-spacing:1.4px;text-transform:uppercase}.navlabel{color:#607594;font-size:10px;font-weight:800;letter-spacing:1.6px;padding:0 12px}.nav{display:grid;gap:7px}.nav button{border:1px solid transparent;background:transparent;color:#9eb0ca;padding:12px 13px;border-radius:12px;text-align:left;display:flex;gap:12px;align-items:center}.nav button .ico{width:20px;text-align:center;font-size:17px}.nav button.active,.nav button:hover{background:linear-gradient(90deg,#1c4c873f,#10233c);border-color:#244f80;color:#fff}.sidebottom{margin-top:auto;border:1px solid var(--line);border-radius:15px;padding:14px;background:#0b1321}.statusdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:7px;box-shadow:0 0 10px #45d6a2}.sidebottom small{color:var(--muted)}main{padding:30px clamp(18px,4vw,54px) 50px;max-width:1500px;width:100%;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}.eyebrow{font-size:11px;color:var(--cyan);font-weight:800;letter-spacing:1.8px;text-transform:uppercase}.top h1{font-size:clamp(25px,3vw,34px);line-height:1.2;margin:5px 0 8px;letter-spacing:-.8px}.sub{color:var(--muted);margin:0}.profile{border:1px solid var(--line);background:#0d1728;border-radius:14px;padding:10px 13px;display:flex;align-items:center;gap:10px;white-space:nowrap}.avatar{width:32px;height:32px;border-radius:10px;background:#1b4a80;display:grid;place-items:center;font-weight:800}.profile small{display:block;color:var(--muted);font-size:11px}.quicknav{display:flex;gap:8px;flex-wrap:wrap;margin:-8px 0 22px;padding:10px;background:#0a1321;border:1px solid var(--line);border-radius:14px}.quicknav button{border:1px solid #263c5a;background:#101d30;color:#b9cce6;border-radius:10px;padding:10px 13px;font-weight:700}.quicknav button.active,.quicknav button:hover{background:#17365b;border-color:#318bff;color:#fff}
+.page{display:none}.page.active{display:block}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:22px 0}.stat{background:linear-gradient(145deg,#111d31,#0c1422);border:1px solid var(--line);border-radius:16px;padding:17px 19px}.stat .label{font-size:12px;color:var(--muted)}.stat strong{display:block;font-size:27px;margin:5px 0 2px}.stat small{color:#6f87a8;font-size:11px}.card{background:linear-gradient(145deg,rgba(17,28,47,.96),rgba(10,17,29,.97));border:1px solid var(--line);border-radius:18px;padding:22px;margin:16px 0;box-shadow:0 16px 50px #00000018}.cardhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.card h2{font-size:17px;margin:0}.muted{color:var(--muted)}.searchgrid{display:grid;grid-template-columns:1.2fr 1fr auto;gap:12px;align-items:end}.field label{display:block;color:#b6c7df;font-size:12px;font-weight:650;margin:0 0 7px}.field input,.field select{width:100%;border:1px solid #2b3e5d;border-radius:11px;background:#080f1c;color:var(--text);padding:12px 13px;outline:none}.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #318bff22}.btn{border:1px solid #31517b;border-radius:11px;padding:11px 16px;background:#14243b;color:#e9f3ff;font-weight:700}.btn.primary{background:linear-gradient(135deg,#318bff,#1763d7);border-color:#398fff;box-shadow:0 6px 18px #1763d733}.btn:hover{filter:brightness(1.12)}.btn:disabled{opacity:.45;cursor:not-allowed}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.resultsbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:23px 0 10px}.pill{border:1px solid #25456d;color:#9dcaff;background:#10213a;border-radius:99px;padding:4px 9px;font-size:11px;font-weight:700}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:13px}table{border-collapse:collapse;width:100%;min-width:650px}th{text-align:left;color:#8399b8;background:#0b1423;font-size:11px;text-transform:uppercase;letter-spacing:.8px;padding:13px 15px}td{padding:14px 15px;border-top:1px solid #1d2b41;font-size:13px;color:#d8e5f8}tr:hover td{background:#12203966}.person{font-weight:750;color:#f2f7ff}.address{color:#9eb1cc}.empty{text-align:center;padding:35px 18px;color:var(--muted)}.empty strong{display:block;color:#dceaff;margin-bottom:5px}.notice{padding:13px 15px;border-radius:12px;border:1px solid #344d6e;background:#101f34;color:#b9cce6;font-size:13px;margin:14px 0}.notice.warn{border-color:#6e512b;background:#251d12;color:#f6d79e}.notice.good{border-color:#245f52;background:#0d211e;color:#9ce8d0}.uploadbox{border:1px dashed #38577e;border-radius:15px;padding:27px;text-align:center;background:#0a1423}.uploadicon{font-size:28px;margin-bottom:8px}.uploadbox h3{margin:0 0 6px}.uploadbox p{color:var(--muted);max-width:510px;margin:0 auto 17px;font-size:13px}.fileinfo{display:none;text-align:left;background:#0a1727;border:1px solid var(--line);padding:12px;border-radius:10px;margin-top:13px;color:#b8cbe4;font-size:13px}.settingsgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.setting{border:1px solid var(--line);border-radius:13px;padding:15px;background:#0b1422}.setting strong{display:block;margin-bottom:4px}.setting p{font-size:12px;color:var(--muted);margin:0}.login-screen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,#12335e 0,transparent 48%),#060a12;z-index:10;display:grid;place-items:center;padding:20px}.loginbox{width:min(420px,100%);border:1px solid #28405f;border-radius:22px;padding:30px;background:#0c1422ee;box-shadow:0 30px 100px #0008}.loginbrand{display:flex;align-items:center;gap:12px;margin-bottom:25px}.loginbox h1{font-size:25px;margin:0 0 7px}.loginbox>p{color:var(--muted);font-size:13px;margin:0 0 22px}.loginbox .field{margin:14px 0}.loginbox .btn{width:100%;margin-top:8px}.loginerror{color:#ff9b9b;font-size:12px;min-height:18px;margin-top:9px}.demo-hint{font-size:11px;color:#8da4c2;background:#101f33;padding:10px;border-radius:10px;margin-top:16px}.mobilebar{display:none}.footer-note{color:#5e7393;font-size:11px;text-align:center;margin-top:22px}
+@media(max-width:850px){.app{grid-template-columns:1fr}.side{display:none}main{padding:22px 15px 85px}.top{align-items:flex-start}.profile{padding:7px}.profile .ptext{display:none}.stats{gap:8px}.stat{padding:13px}.stat strong{font-size:22px}.searchgrid{grid-template-columns:1fr}.searchgrid .btn{width:100%}.settingsgrid{grid-template-columns:1fr}.mobilebar{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;justify-content:space-around;gap:4px;background:#080e19f5;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}.mobilebar button{border:0;background:transparent;color:#91a5c3;font-size:10px;display:grid;justify-items:center;gap:3px;padding:5px}.mobilebar button.active{color:#6bb6ff}.mobilebar span{font-size:18px}.card{padding:16px}.top h1{font-size:26px}}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#101b33">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+</head>
+<body>
+<div class="login-screen" id="loginScreen">
+  <div class="loginbox">
+    <div class="loginbrand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5M8 11h6M11 8v6"/></svg></div><div><strong>Mi Consulta</strong><small style="display:block;color:#91a3bf;letter-spacing:1.3px;font-size:10px">PANEL DE CONSULTA</small></div></div>
+    <h1>Bienvenido de nuevo</h1><p>Ingresá para abrir el prototipo de demostración.</p>
+    <form id="loginForm"><div class="field"><label for="username">Usuario</label><input id="username" autocomplete="username" placeholder="Ingresá tu usuario" required></div><div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" placeholder="Ingresá tu contraseña" required></div><button class="btn primary" id="loginButton" type="submit">Ingresar al panel →</button><div class="loginerror" id="loginError"></div></form>
+    <div class="demo-hint">Acceso de prueba: <b>demo</b> / <b>demo123</b><br>Este ingreso es demostrativo y no protege datos reales.</div>
+  </div>
+</div>
+<div class="app" id="app" hidden>
+<aside class="side">
+ <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5M8 11h6M11 8v6"/></svg></div><div><strong>Mi Consulta</strong><small>Panel de consulta</small></div></div>
+ <div><div class="navlabel">MENÚ PRINCIPAL</div><nav class="nav">
+ <button class="active" data-page="search"><span class="ico">⌕</span>Buscar registros</button>
+ <button data-page="import"><span class="ico">⇧</span>Importar archivo</button>
+ <button data-page="records"><span class="ico">▤</span>Registros</button>
+ <button data-page="settings"><span class="ico">⚙</span>Ajustes</button>
+ </nav></div>
+ <div class="sidebottom"><div style="font-weight:700;margin-bottom:5px"><span class="statusdot"></span>Prototipo activo</div><small>Sesión de demostración<br>Datos ficticios únicamente</small></div>
+</aside>
+<main>
+ <header class="top"><div><div class="eyebrow">CENTRO DE CONSULTA · DEMO</div><h1 id="pageTitle">Buscar registros</h1><p class="sub" id="pageSubtitle">Encontrá coincidencias en los datos de prueba.</p></div><div class="profile"><div class="avatar">D</div><div class="ptext"><b>Usuario demo</b><small>Sesión local de prueba</small></div><button class="btn" id="logoutBtn" style="padding:7px 10px">Salir</button></div></header>
+ <nav class="quicknav" aria-label="Secciones de Mi Consulta">
+  <button class="active" data-page="search">⌕ Buscar</button>
+  <button data-page="import">⇧ Importar CSV</button>
+  <button data-page="records">▤ Registros</button>
+  <button data-page="settings">⚙ Configuración</button>
+ </nav>
+ <section class="page active" id="page-search">
+  <div class="stats"><div class="stat"><span class="label">Registros de prueba</span><strong id="statCount">3</strong><small>Datos ficticios cargados</small></div><div class="stat"><span class="label">Coincidencias</span><strong id="statMatches">3</strong><small>Según tu búsqueda</small></div><div class="stat"><span class="label">Estado</span><strong style="font-size:21px;color:var(--good)">Listo</strong><small>Motor de demo activo</small></div></div>
+  <div class="card"><div class="cardhead"><h2>⌕ &nbsp;Búsqueda rápida</h2><span class="pill">BÚSQUEDA LOCAL</span></div>
+   <div class="searchgrid"><div class="field"><label for="query">Nombre, apellido o identificador ficticio</label><input id="query" placeholder="Ej. Martina López o DEMO-001"></div><div class="field"><label for="filter">Buscar por</label><select id="filter"><option value="all">Todos los campos</option><option value="name">Nombre y apellido</option><option value="id">Identificador de prueba</option><option value="address">Dirección ficticia</option></select></div><button class="btn primary" id="searchBtn">Buscar registros</button></div>
+   <div class="toolbar" style="margin-top:12px"><button class="btn" id="clearBtn">Limpiar búsqueda</button><button class="btn" id="resetBtn">Restaurar ejemplos</button></div>
+  </div>
+  <div class="resultsbar"><div><b>Resultados</b> <span class="muted" id="resultCount">· 3 registros</span></div><span class="pill">SOLO DATOS FICTICIOS</span></div>
+  <div class="tablewrap"><table><thead><tr><th>Nombre de ejemplo</th><th>ID de prueba</th><th>Dirección ficticia</th><th>Estado</th></tr></thead><tbody id="results"></tbody></table></div>
+  <div class="footer-note">Este prototipo no consulta fuentes oficiales ni contiene registros reales.</div>
+ </section>
+ <section class="page" id="page-import">
+  <div class="card"><div class="cardhead"><h2>⇧ &nbsp;Seleccionar archivo</h2><span class="pill">INTERFAZ DEMO</span></div>
+   <div class="uploadbox"><div class="uploadicon">▤</div><h3>Elegí el CSV de ejemplo que descargaste</h3><p>Seleccioná ejemplo_importacion_mi_consulta.csv para probar la importación y revisar cambios antes de aplicarlos. Por seguridad, esta versión solo acepta identificadores ficticios con formato <b>DEMO-001</b>.</p><label class="btn primary" for="fileInput" style="display:inline-block">Seleccionar CSV</label><input id="fileInput" type="file" accept=".csv,text/csv" hidden><div class="fileinfo" id="fileInfo"></div><div id="importPreview" style="display:none;margin-top:16px"><h3 style="margin-bottom:8px">Vista previa</h3><p class="muted" id="importSummary" style="font-size:13px"></p><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>ID de prueba</th><th>Dirección ficticia</th><th>Acción</th></tr></thead><tbody id="importRows"></tbody></table></div><div class="toolbar" style="margin-top:12px"><button class="btn primary" id="applyImport">Aplicar actualización</button><button class="btn" id="cancelImport">Cancelar</button></div></div></div>
+ 
+  <div class="card" style="margin-top:16px">
+   <div class="cardhead"><h2>▣ &nbsp;Copia de seguridad</h2><span class="pill">DATOS FICTICIOS</span></div>
+   <p class="muted">Como abrís el HTML desde Descargas, Chrome puede no conservar el almacenamiento entre aperturas. Descargá una copia de seguridad después de importar cambios y restaurala si los registros desaparecen.</p>
+   <div class="toolbar">
+    <button class="btn primary" id="exportBackup">Descargar copia de seguridad</button>
+    <label class="btn" for="backupInput" style="display:inline-block">Restaurar copia</label>
+    <input id="backupInput" type="file" accept=".json,application/json" hidden>
+   </div>
+   <div class="fileinfo" id="backupInfo"></div>
+  </div>
+
+  <div class="notice warn"><b>Solo datos ficticios.</b> Esta demo procesa CSV localmente, guarda solo los datos ficticios en este navegador y únicamente acepta IDs DEMO-###. No cargues padrones ni información personal real: el archivo HTML no tiene autenticación real ni almacenamiento seguro.</div>
+   <div class="toolbar"><button class="btn primary" id="loadExamples">Cargar datos ficticios</button><button class="btn" id="backSearch">Volver a búsqueda</button></div>
+  </div>
+  <div class="card"><h2>Formato del CSV</h2><p class="muted" style="font-size:13px">Usá una primera fila con estas columnas: <code>id,name,address</code>. Ejemplo ficticio: <code>DEMO-001,Martina López,Calle Azul 123 · Ciudad Ejemplo</code>. Si el ID ya existe, actualiza ese registro; si es nuevo, agrega otro registro de prueba.</p></div>
+ </section>
+
+ <section class="page" id="page-records">
+  <div class="card"><div class="cardhead"><h2>▤ &nbsp;Registros de ejemplo</h2><span class="pill">DATOS FICTICIOS</span></div>
+   <p class="muted" style="font-size:13px">Vista completa de los registros de demostración. Podés volver al buscador para filtrar por nombre, identificador o dirección ficticia.</p>
+   <div class="tablewrap"><table><thead><tr><th>Nombre de ejemplo</th><th>ID de prueba</th><th>Dirección ficticia</th><th>Estado</th></tr></thead><tbody id="allRecords"></tbody></table></div>
+   <div class="toolbar" style="margin-top:14px"><button class="btn primary" id="recordsSearch">Ir al buscador</button><button class="btn" id="recordsReset">Restaurar ejemplos</button></div>
+  </div>
+  <div class="notice">Los registros mostrados son inventados y no corresponden a personas reales.</div>
+ </section>
+ <section class="page" id="page-settings">
+  <div class="card"><div class="cardhead"><h2>⚙ &nbsp;Configuración y seguridad</h2><span class="pill">PROTOTIPO</span></div>
+   <div class="notice warn"><b>Importante:</b> el usuario y contraseña de este demo están escritos en el propio archivo HTML. Cualquiera que tenga el archivo puede inspeccionarlo; no lo uses para guardar ni consultar datos reales.</div>
+   <div class="settingsgrid">
+    <div class="setting"><strong>🔐 Inicio de sesión</strong><p>Simulado en el navegador. No es autenticación de servidor.</p></div>
+    <div class="setting"><strong>🗄️ Almacenamiento</strong><p>Los registros ficticios se guardan en este navegador para que sigan disponibles al cerrar y volver a abrir el archivo en el mismo dispositivo y navegador. No se sincronizan con otros dispositivos.</p></div>
+    <div class="setting"><strong>🛡️ Para una versión real</strong><p>Usar un servidor administrado, cuentas individuales, permisos mínimos, cifrado y registro de actividad.</p></div>
+    <div class="setting"><strong>📱 Acceso desde varios dispositivos</strong><p>Requeriría un servicio seguro alojado y autenticación real; compartir este HTML no sincroniza información.</p></div>
+   </div>
+  </div>
+  <div class="card"><h2>Preferencias visuales</h2><p class="muted" style="font-size:13px">Tema oscuro azul · Diseño adaptable a Android y computadora · Navegación lateral y móvil.</p><button class="btn" id="settingsBack">Volver a búsqueda</button></div>
+ </section>
+</main>
+</div>
+<nav class="mobilebar" id="mobilebar" hidden><button class="active" data-page="search"><span>⌕</span>Buscar</button><button data-page="import"><span>⇧</span>Importar</button><button data-page="records"><span>▤</span>Registros</button><button data-page="settings"><span>⚙</span>Ajustes</button></nav>
+<script>
+(function(){
+ const demoRecords=[
+  {name:"Martina López",id:"DEMO-001",address:"Calle Azul 123 · Ciudad Ejemplo",status:"Ejemplo"},
+  {name:"Tomás Fernández",id:"DEMO-002",address:"Pasaje Norte 45 · Ciudad Ejemplo",status:"Ejemplo"},
+  {name:"Valentina Gómez",id:"DEMO-003",address:"Av. del Parque 890 · Ciudad Ejemplo",status:"Ejemplo"}
+ ];
+ const STORAGE_KEY="miConsulta_demoRecords_v1";
+ function loadSavedRecords(){
+   try{
+     const raw=localStorage.getItem(STORAGE_KEY);
+     if(!raw) return demoRecords.map(r=>({...r}));
+     const saved=JSON.parse(raw);
+     if(!Array.isArray(saved) || !saved.every(r=>r && /^DEMO-\\d{3,}$/.test(String(r.id||"")) && typeof r.name==="string" && typeof r.address==="string")) return demoRecords.map(r=>({...r}));
+     return saved.map(r=>({name:r.name,id:r.id,address:r.address,status:"Ejemplo"}));
+   }catch(e){return demoRecords.map(r=>({...r}));}
+ }
+ let records=loadSavedRecords();
+ let pendingImport=[];
+ const $=id=>document.getElementById(id);
+ function saveRecords(){
+   try{
+     localStorage.setItem(STORAGE_KEY,JSON.stringify(records));
+     return true;
+   }catch(e){
+     alert("No se pudieron guardar los cambios en el almacenamiento local. Descargá una copia de seguridad para conservarlos.");
+     return false;
+   }
+ }
+ function login(e){
+   if(e) e.preventDefault();
+   const u=$("username").value.trim().toLowerCase();
+   const p=$("password").value.trim();
+   if(u==="demo" && p==="demo123"){
+     $("loginError").textContent="";
+     $("loginScreen").style.display="none";
+     $("app").hidden=false;
+     $("mobilebar").hidden=false;
+     render();
+   } else {
+     $("loginError").textContent="Datos incorrectos. Escribí usuario demo y contraseña demo123, sin espacios.";
+   }
+ }
+ $("loginButton").addEventListener("click",login);
+ $("loginForm").addEventListener("submit",login);
+ $("username").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("password").focus();}});
+ $("password").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();login(e);}});
+ $("logoutBtn").addEventListener("click",()=>{ $("app").hidden=true;$("mobilebar").hidden=true;$("loginScreen").style.display="grid";$("password").value="";$("loginError").textContent="";});
+ function showPage(page){document.querySelectorAll(".page").forEach(el=>el.classList.toggle("active",el.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(el=>el.classList.toggle("active",el.dataset.page===page));const titles={search:["Buscar registros","Encontrá coincidencias en los datos de prueba."],import:["Importar archivo","Vista demostrativa del selector de archivos."],records:["Registros","Todos los registros ficticios de la demostración."],settings:["Ajustes","Opciones y límites de seguridad del prototipo."]};$("pageTitle").textContent=titles[page][0];$("pageSubtitle").textContent=titles[page][1];}
+ document.querySelectorAll("[data-page]").forEach(btn=>btn.addEventListener("click",()=>showPage(btn.dataset.page)));
+ function renderAllRecords(){const body=$("allRecords");if(!body)return;body.innerHTML="";records.forEach(r=>{const tr=document.createElement("tr");[r.name,r.id,r.address,r.status].forEach((v,i)=>{const td=document.createElement("td");td.textContent=v;if(i===0)td.className="person";if(i===2)td.className="address";if(i===3)td.innerHTML='<span class="pill">EJEMPLO</span>';tr.appendChild(td);});body.appendChild(tr);});}
+ function render(){const q=$("query").value.trim().toLocaleLowerCase("es"),filter=$("filter").value;const filtered=records.filter(r=>{if(!q)return true;const fields=filter==="name"?[r.name]:filter==="id"?[r.id]:filter==="address"?[r.address]:[r.name,r.id,r.address];return fields.some(v=>v.toLocaleLowerCase("es").includes(q));});$("results").innerHTML="";if(!filtered.length){$("results").innerHTML='<tr><td colspan="4"><div class="empty"><strong>No encontramos coincidencias</strong>Probá con otro término o limpiá la búsqueda.</div></td></tr>';}else{filtered.forEach(r=>{const tr=document.createElement("tr");[r.name,r.id,r.address,r.status].forEach((v,i)=>{const td=document.createElement("td");td.textContent=v;if(i===0)td.className="person";if(i===2)td.className="address";if(i===3){td.innerHTML='<span class="pill">EJEMPLO</span>';}tr.appendChild(td);});$("results").appendChild(tr);});}$("resultCount").textContent="· "+filtered.length+" coincidencia(s)";$("statCount").textContent=records.length;$("statMatches").textContent=filtered.length;renderAllRecords();}
+ $("searchBtn").addEventListener("click",render);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")render();});$("filter").addEventListener("change",render);
+ $("clearBtn").addEventListener("click",()=>{$("query").value="";$("filter").value="all";render();$("query").focus();});
+ $("resetBtn").addEventListener("click",()=>{records=demoRecords.map(r=>({...r}));saveRecords();$("query").value="";$("filter").value="all";render();});
+ $("loadExamples").addEventListener("click",()=>{records=demoRecords.map(r=>({...r}));saveRecords();$("query").value="";$("filter").value="all";showPage("search");render();});
+ $("backSearch").addEventListener("click",()=>showPage("search"));$("settingsBack").addEventListener("click",()=>showPage("search"));
+ $("recordsSearch").addEventListener("click",()=>showPage("search"));$("recordsReset").addEventListener("click",()=>{records=demoRecords.map(r=>({...r}));saveRecords();render();});
+ function parseCSVLine(line){const out=[];let cur="",quoted=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'&&quoted&&line[i+1]==='"'){cur+='"';i++;}else if(ch==='"'){quoted=!quoted;}else if(ch===','&&!quoted){out.push(cur.trim());cur="";}else{cur+=ch;}}out.push(cur.trim());return out;}
+ function csvError(message){$("fileInfo").style.display="block";$("fileInfo").textContent=message;$("importPreview").style.display="none";pendingImport=[];}
+ $("fileInput").addEventListener("change",async()=>{const f=$("fileInput").files[0];const box=$("fileInfo");$("importPreview").style.display="none";pendingImport=[];if(!f){box.style.display="none";return;}box.style.display="block";if(!f.name.toLowerCase().endsWith(".csv")){csvError("Por ahora solo se admite CSV (.csv). Guardá una copia de prueba en ese formato.");return;}if(f.size>2*1024*1024){csvError("El archivo supera 2 MB. Para esta demo usá un CSV pequeño de prueba.");return;}try{const raw=(await f.text()).replace(/^\uFEFF/,"");const lines=raw.split(/\r?\n/).filter(x=>x.trim());if(lines.length<2){csvError("El CSV no tiene filas de datos.");return;}const headers=parseCSVLine(lines[0]).map(x=>x.toLowerCase());const ix={id:headers.indexOf("id"),name:headers.indexOf("name"),address:headers.indexOf("address")};if(Object.values(ix).some(x=>x<0)){csvError("Faltan columnas. La primera fila debe ser: id,name,address");return;}const seen=new Set();const parsed=[];for(let n=1;n<lines.length;n++){const cols=parseCSVLine(lines[n]);const r={id:(cols[ix.id]||"").trim().toUpperCase(),name:(cols[ix.name]||"").trim(),address:(cols[ix.address]||"").trim(),status:"Ejemplo"};if(!r.id&&!r.name&&!r.address)continue;if(!/^DEMO-\d{3,}$/.test(r.id)){csvError("Fila "+(n+1)+": el ID debe ser ficticio y tener formato DEMO-001. No se aceptan identificadores personales.");return;}if(!r.name||!r.address){csvError("Fila "+(n+1)+": completá nombre y dirección ficticios.");return;}if(seen.has(r.id)){csvError("El ID "+r.id+" aparece más de una vez en el archivo.");return;}seen.add(r.id);parsed.push(r);}if(!parsed.length){csvError("No se encontraron filas válidas para importar.");return;}pendingImport=parsed;let updates=0,adds=0;parsed.forEach(r=>records.some(old=>old.id===r.id)?updates++:adds++);$("fileInfo").textContent="CSV leído: "+f.name+" · "+parsed.length+" fila(s) válida(s). Todavía no se aplicaron cambios.";$("importSummary").textContent=updates+" registro(s) se actualizarán y "+adds+" se agregarán. Revisá la vista previa antes de confirmar.";const body=$("importRows");body.innerHTML="";parsed.forEach(r=>{const tr=document.createElement("tr");const existing=records.some(old=>old.id===r.id);[r.name,r.id,r.address,existing?"Actualizar":"Agregar"].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});body.appendChild(tr);});$("importPreview").style.display="block";}catch(e){csvError("No pudimos leer el archivo. Revisá que sea un CSV válido.");}});
+ $("applyImport").addEventListener("click",()=>{if(!pendingImport.length)return;let updated=0,added=0;pendingImport.forEach(incoming=>{const i=records.findIndex(r=>r.id===incoming.id);if(i>=0){records[i]={...records[i],...incoming};updated++;}else{records.push(incoming);added++;}});pendingImport=[];saveRecords();$("fileInput").value="";$("importPreview").style.display="none";$("fileInfo").textContent="Listo: "+updated+" actualizado(s) y "+added+" agregado(s). Los cambios se guardaron en este navegador.";render();showPage("records");});
+
+ $("exportBackup").addEventListener("click",()=>{
+   const payload={app:"Mi Consulta demo",version:1,exportedAt:new Date().toISOString(),records:records};
+   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"});
+   const url=URL.createObjectURL(blob);const a=document.createElement("a");
+   a.href=url;a.download="mi_consulta_copia_seguridad_demo.json";
+   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+   $("backupInfo").style.display="block";
+   $("backupInfo").textContent="Copia preparada con "+records.length+" registro(s) ficticio(s). Guardala en Descargas.";
+ });
+ $("backupInput").addEventListener("change",async()=>{
+   const f=$("backupInput").files[0];if(!f)return;
+   const info=$("backupInfo");info.style.display="block";
+   try{
+     const data=JSON.parse(await f.text());
+     const arr=Array.isArray(data)?data:data.records;
+     if(!Array.isArray(arr)||!arr.length)throw new Error("La copia no contiene registros.");
+     const ids=new Set();
+     const clean=arr.map(r=>{
+       const id=String(r.id||"").trim().toUpperCase();
+       const name=String(r.name||"").trim();
+       const address=String(r.address||"").trim();
+       if(!/^DEMO-\d{3,}$/.test(id)||!name||!address||ids.has(id))throw new Error("La copia tiene datos inválidos o IDs repetidos. Solo se admiten registros ficticios DEMO-###.");
+       ids.add(id);return {id,name,address,status:"Ejemplo"};
+     });
+     records=clean;
+     const saved=saveRecords();
+     render();info.textContent="Copia restaurada: "+records.length+" registro(s) ficticio(s). "+(saved?"Se intentó guardar en este navegador.":"El almacenamiento local no está disponible.")+" Comprobá Registros.";
+     showPage("records");
+   }catch(e){info.textContent="No se pudo restaurar la copia: "+e.message;}
+   $("backupInput").value="";
+ });
+
+ $("cancelImport").addEventListener("click",()=>{pendingImport=[];$("importPreview").style.display="none";$("fileInput").value="";$("fileInfo").textContent="Importación cancelada; no se aplicaron cambios.";});
+ render();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>

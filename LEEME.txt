@@ -1,0 +1,14 @@
+MI CONSULTA — PAQUETE PWA DE PRUEBA
+
+Contenido:
+- index.html: demo existente con datos ficticios y copia de seguridad JSON.
+- manifest.webmanifest: configuración instalable.
+- service-worker.js: caché básica para abrir la interfaz sin conexión después de la primera visita.
+- icon-192.png e icon-512.png: iconos de instalación.
+
+IMPORTANTE:
+1. No abras index.html directamente desde Descargas para probar la instalación PWA.
+2. Para instalar una PWA, los archivos deben servirse desde HTTPS (o localhost en la computadora).
+3. Este paquete NO es un APK. Es una aplicación web instalable mediante Chrome una vez alojada en HTTPS.
+4. La caché permite abrir la interfaz offline, pero no sustituye una base de datos sincronizada ni una autenticación real.
+5. Usa solo datos ficticios. No cargues padrones ni información personal real en esta demo.
