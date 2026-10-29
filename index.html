@@ -194,5 +194,11 @@ $("backupInput").addEventListener("change",async()=>{
 render();
 })();
 </script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script>
+const SUPABASE_URL = "https://hduhbkoebnczeqzqvsvm.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_V3LXLnVEVG-Rj32js-mPOA_HAfWM4Aw";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
 </body>
 </html>
