@@ -200,10 +200,7 @@ const SUPABASE_URL = "https://hduhbkoebnczeqzqvsvm.supabase.co";
   const SUPABASE_KEY = "sb_publishable_V3LXLnVEVG-Rj32js-mPOA_HAfWM4Aw";
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   console.log("Supabase conectado:", !!supabaseClient);
-  supabaseClient.from("consultations").select("*").limit(1)
-  .then(({ data, error }) => {
-    console.log("Prueba de base de datos:", error ? error.message : "Consulta realizada correctamente");
-  });
+
 </script>
 </body>
 </html>
