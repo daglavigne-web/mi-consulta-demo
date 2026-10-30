@@ -137,6 +137,19 @@ function render(){
  renderTable("results",filtered);renderTable("allRecords",records);
  $("resultCount").textContent=filtered.length+" coincidencia(s)";$("statCount").textContent=records.length;$("statMatches").textContent=filtered.length;
 }
+ async function cargarConsultasSupabase() {
+  const { data, error } = await supabaseClient
+    .from("consultations")
+    .select("*");
+
+  if (error) {
+    console.error("Error al cargar consultas:", error.message);
+    return [];
+  }
+
+  console.log("Consultas de Supabase cargadas:", data.length);
+  return data;
+}
 $("searchBtn").addEventListener("click",render);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")render();});$("filter").addEventListener("change",render);
 $("clearBtn").addEventListener("click",()=>{$("query").value="";$("filter").value="all";render();});
 function resetExamples(){if(!confirm("¿Querés reemplazar los registros actuales por los 3 ejemplos? Si tenés datos importados, primero descargá una copia."))return;records=examples.map(r=>({...r}));if(saveRecords())render();}
