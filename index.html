@@ -20,7 +20,7 @@ main{padding:28px clamp(16px,4vw,48px) 50px;max-width:1400px;width:100%;margin:a
   <div class="brand" style="padding:0;margin-bottom:22px"><div class="logo">⌕</div><div><strong>Mi Consulta</strong><small>PANEL DE CONSULTA</small></div></div>
   <h1>Bienvenido de nuevo</h1><p>Ingresá para abrir el prototipo de demostración.</p>
   <form id="loginForm">
-   <div class="field"><label for="username">Usuario</label><input id="username" autocomplete="username" placeholder="Ingresá tu usuario" required></div>
+<div class="field"><label for="username">Correo electrónico</label><input id="username" type="email" autocomplete="email" placeholder="Ingresá tu correo electrónico" required></div>
    <div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" placeholder="Ingresá tu contraseña" required></div>
    <button class="btn primary" type="submit">Ingresar al panel →</button><div class="loginerror" id="loginError"></div>
   </form>
@@ -100,7 +100,30 @@ function showPage(page){
  $("pageTitle").textContent=titles[page][0];$("pageSubtitle").textContent=titles[page][1];
 }
 document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
-function login(e){e.preventDefault();if($("username").value.trim().toLowerCase()==="demo"&&$("password").value==="demo123"){$("loginError").textContent="";$("loginScreen").classList.add("hidden");$("app").classList.remove("hidden");$("mobilebar").classList.remove("hidden");render();}else{$("loginError").textContent="Datos incorrectos. Usá demo / demo123.";}}
+
+async function login(e){
+  e.preventDefault();
+
+  const email = $("username").value.trim();
+  const password = $("password").value;
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if(error){
+    $("loginError").textContent = "Correo o contraseña incorrectos.";
+    return;
+  }
+
+  $("loginError").textContent = "";
+  $("loginScreen").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("mobilebar").classList.remove("hidden");
+  render();
+}
+
 $("loginForm").addEventListener("submit",login);
 $("logoutBtn").addEventListener("click",()=>{$("app").classList.add("hidden");$("mobilebar").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
 function renderTable(bodyId,rows){
