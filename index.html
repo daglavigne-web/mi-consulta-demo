@@ -39,7 +39,7 @@ main{padding:28px clamp(16px,4vw,48px) 50px;max-width:1400px;width:100%;margin:a
   <section class="page active" id="page-search">
    <div class="stats"><div class="stat"><span class="label">Registros guardados</span><strong id="statCount">0</strong><small>Datos ficticios</small></div><div class="stat"><span class="label">Coincidencias</span><strong id="statMatches">0</strong><small>Según tu búsqueda</small></div><div class="stat"><span class="label">Guardado</span><strong id="saveState" style="font-size:19px;color:var(--good)">Listo</strong><small id="saveHint">En este navegador</small></div></div>
    <div class="card"><div class="cardhead"><h2>⌕ Búsqueda rápida</h2><span class="pill">BÚSQUEDA LOCAL</span></div><div class="searchgrid"><div class="field"><label for="query">Nombre, ID o dirección ficticia</label><input id="query" placeholder="Ej. Martina López o DEMO-001"></div><div class="field"><label for="filter">Buscar por</label><select id="filter"><option value="all">Todos los campos</option><option value="name">Nombre</option><option value="id">Identificador</option><option value="address">Dirección</option></select></div><button class="btn primary" id="searchBtn">Buscar registros</button></div><div class="toolbar"><button class="btn" id="clearBtn">Limpiar búsqueda</button><button class="btn" id="resetBtn">Restaurar ejemplos</button></div></div>
-   <div class="card"><div class="cardhead"><h2>Resultados</h2><span class="pill" id="resultCount">0 registros</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>ID de prueba</th><th>Dirección ficticia</th><th>Estado</th></tr></thead><tbody id="results"></tbody></table></div></div>
+   <div class="card"><div class="cardhead"><h2>Resultados</h2><span class="pill" id="resultCount">0 registros</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Sexo</th><th>Domicilio</th><th>Ciudad</th></tr></thead><tbody id="results"></tbody></table></div></div>
    <div class="footer-note">Este prototipo no consulta fuentes oficiales ni debe contener datos reales.</div>
   </section>
   <section class="page" id="page-import">
@@ -48,7 +48,7 @@ main{padding:28px clamp(16px,4vw,48px) 50px;max-width:1400px;width:100%;margin:a
    <div class="notice warn"><b>Importante:</b> los datos se guardan en el almacenamiento local de este navegador. No se sincronizan con otros dispositivos. Esta demo no tiene autenticación real ni almacenamiento seguro; no cargues información personal real.</div>
    <div class="toolbar"><button class="btn" id="backSearch">Volver a búsqueda</button></div>
   </section>
-  <section class="page" id="page-records"><div class="card"><div class="cardhead"><h2>▤ Todos los registros</h2><span class="pill">DATOS FICTICIOS</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>ID de prueba</th><th>Dirección ficticia</th><th>Estado</th></tr></thead><tbody id="allRecords"></tbody></table></div><div class="toolbar"><button class="btn primary" id="recordsSearch">Ir al buscador</button><button class="btn" id="recordsReset">Restaurar ejemplos</button></div></div></section>
+  <section class="page" id="page-records"><div class="card"><div class="cardhead"><h2>▤ Todos los registros</h2><span class="pill">DATOS FICTICIOS</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Sexo</th><th>Domicilio</th><th>Ciudad</th></tr></thead><tbody id="allRecords"></tbody></table></div><div class="toolbar"><button class="btn primary" id="recordsSearch">Ir al buscador</button><button class="btn" id="recordsReset">Restaurar ejemplos</button></div></div></section>
   <section class="page" id="page-settings"><div class="card"><h2>⚙ Configuración y seguridad</h2><div class="notice warn">El inicio de sesión es solo demostrativo. Los registros se guardan en este navegador y no se comparten con otros dispositivos.</div><p class="muted">Si publicás cambios en GitHub Pages y no aparecen, probá recargar la página con Ctrl + F5 en la computadora. No borres los datos del navegador antes de exportar una copia.</p></div></section>
  </main>
 </div>
@@ -63,7 +63,7 @@ const examples = [
  {name:"Valentina Gómez",id:"DEMO-003",address:"Av. del Parque 890 · Ciudad Ejemplo",status:"Ejemplo"}
 ];
 const $ = id => document.getElementById(id);
-let records = loadRecords();
+let records = [];
 let pendingImport = [];
 function validRecord(r){return r && String(r.id||"").trim() && typeof r.name==="string" && r.name.trim() && typeof r.address==="string" && r.address.trim();}
 function cleanRecord(r){return {name:String(r.name).trim(),id:String(r.id).trim().toUpperCase(),address:String(r.address).trim(),status:"Ejemplo"};}
@@ -121,6 +121,7 @@ async function login(e){
   $("loginScreen").classList.add("hidden");
   $("app").classList.remove("hidden");
   $("mobilebar").classList.remove("hidden");
+ await cargarConsultasSupabase();
   render();
 }
 
@@ -128,27 +129,44 @@ $("loginForm").addEventListener("submit",login);
 $("logoutBtn").addEventListener("click",()=>{$("app").classList.add("hidden");$("mobilebar").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
 function renderTable(bodyId,rows){
  const body=$(bodyId);body.replaceChildren();
- if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=4;td.className="empty";td.textContent="No hay registros para mostrar.";tr.append(td);body.append(tr);return;}
- rows.forEach(r=>{const tr=document.createElement("tr");[r.name,r.id,r.address,"EJEMPLO"].forEach((value,i)=>{const td=document.createElement("td");td.textContent=value;if(i===0)td.style.fontWeight="700";if(i===3){const span=document.createElement("span");span.className="pill";span.textContent=value;td.replaceChildren(span);}tr.append(td);});body.append(tr);});
+ if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.className="empty";td.textContent="No hay registros para mostrar.";tr.append(td);body.append(tr);return;}
+ rows.forEach(r=>{const tr=document.createElement("tr");[r.nombre,r.apellido,r.dni,r.sexo,r.domicilio,r.barrio_o_ciudad].forEach((value,i)=>{const td=document.createElement("td");td.textContent=value;if(i===0)td.style.fontWeight="700";if(i===3){const span=document.createElement("span");span.className="pill";span.textContent=value;td.replaceChildren(span);}tr.append(td);});body.append(tr);});
 }
 function render(){
  const q=$("query").value.trim().toLocaleLowerCase("es"),filter=$("filter").value;
- const filtered=records.filter(r=>{const fields=filter==="name"?[r.name]:filter==="id"?[r.id]:filter==="address"?[r.address]:[r.name,r.id,r.address];return !q||fields.some(v=>v.toLocaleLowerCase("es").includes(q));});
+ 
+const filtered = records.filter(r => {
+  const fields = [
+    r.nombre,
+    r.apellido,
+    r.dni,
+    r.sexo,
+    r.domicilio,
+    r.barrio_o_ciudad
+  ];
+  return !q || fields.some(v =>
+    String(v ?? "").toLocaleLowerCase("es").includes(q)
+  );
+});
+
  renderTable("results",filtered);renderTable("allRecords",records);
  $("resultCount").textContent=filtered.length+" coincidencia(s)";$("statCount").textContent=records.length;$("statMatches").textContent=filtered.length;
 }
  async function cargarConsultasSupabase() {
   const { data, error } = await supabaseClient
-    .from("consultations")
-    .select("*");
+    .from("personas")
+.select("*")
+.limit(100);
 
   if (error) {
-    console.error("Error al cargar consultas:", error.message);
+   console.error("Error al cargar personas:", error.message);
     return [];
   }
 
-  console.log("Consultas de Supabase cargadas:", data.length);
-  return data;
+  console.log("Personas de Supabase cargadas:", data.length);
+records = data || [];
+render();
+return data;
 }
 $("searchBtn").addEventListener("click",render);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")render();});$("filter").addEventListener("change",render);
 $("clearBtn").addEventListener("click",()=>{$("query").value="";$("filter").value="all";render();});
