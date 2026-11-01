@@ -141,8 +141,10 @@ const filtered = records.filter(r => {
     r.apellido,
     r.dni,
     r.sexo,
-    r.domicilio,
-    r.barrio_o_ciudad
+   r.domicilio,
+r.barrio_o_ciudad,
+r.departamento,
+r.lugar
   ];
   return !q || fields.some(v =>
     String(v ?? "").toLocaleLowerCase("es").includes(q)
