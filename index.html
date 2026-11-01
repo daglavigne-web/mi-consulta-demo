@@ -170,7 +170,49 @@ records = data || [];
 render();
 return data;
 }
-$("searchBtn").addEventListener("click",render);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")render();});$("filter").addEventListener("change",render);
+async function buscarEnSupabase() {
+  const texto = $("query").value.trim();
+
+  if (!texto) {
+    records = [];
+    render();
+    return;
+  }
+
+  const campos = [
+    "nombre", "apellido", "dni", "sexo",
+    "domicilio", "barrio_o_ciudad",
+    "departamento", "lugar"
+  ];
+
+  const termino = texto
+    .replace(/[%_\\]/g, "")
+    .replace(/[(),."]/g, "")
+    .trim();
+
+  if (!termino) return;
+
+  const condiciones = campos
+    .map(campo => `${campo}.ilike.%${termino}%`)
+    .join(",");
+
+  const { data, error } = await supabaseClient
+    .from("personas")
+    .select("*")
+    .or(condiciones)
+    .limit(100);
+
+  if (error) {
+    console.error("Error en la búsqueda:", error.message);
+    alert("No se pudo realizar la búsqueda.");
+    return;
+  }
+
+  records = data || [];
+  render();
+}
+ 
+ $("searchBtn").addEventListener("click",buscarEnSupabase);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")buscarEnSupabase();});$("filter").addEventListener("change",render);
 $("clearBtn").addEventListener("click",()=>{$("query").value="";$("filter").value="all";render();});
 function resetExamples(){if(!confirm("¿Querés reemplazar los registros actuales por los 3 ejemplos? Si tenés datos importados, primero descargá una copia."))return;records=examples.map(r=>({...r}));if(saveRecords())render();}
 $("resetBtn").addEventListener("click",resetExamples);$("recordsReset").addEventListener("click",resetExamples);
