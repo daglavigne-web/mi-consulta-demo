@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101b33">
-<title>Mi Consulta — Demo</title>
+<title>Mi Consulta</title>
 <style>
 :root{color-scheme:dark;--bg:#070b14;--panel:#0d1423;--panel2:#111c30;--line:#22324d;--blue:#318bff;--cyan:#5ee7ff;--text:#edf4ff;--muted:#91a3bf;--good:#45d6a2;--warn:#ffca6a;--bad:#ff9292}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#12305a 0,transparent 38%),radial-gradient(ellipse at 95% 10%,#0c2a3c 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -18,41 +18,49 @@ main{padding:28px clamp(16px,4vw,48px) 50px;max-width:1400px;width:100%;margin:a
 <div class="login-screen" id="loginScreen">
  <div class="loginbox">
   <div class="brand" style="padding:0;margin-bottom:22px"><div class="logo">⌕</div><div><strong>Mi Consulta</strong><small>PANEL DE CONSULTA</small></div></div>
-  <h1>Bienvenido de nuevo</h1><p>Ingresá para abrir el prototipo de demostración.</p>
+  <h1>Bienvenido de nuevo</h1><p>Ingresá con tu cuenta para consultar tus registros.</p>
   <form id="loginForm">
 <div class="field"><label for="username">Correo electrónico</label><input id="username" type="email" autocomplete="email" placeholder="Ingresá tu correo electrónico" required></div>
    <div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" placeholder="Ingresá tu contraseña" required></div>
    <button class="btn primary" type="submit">Ingresar al panel →</button><div class="loginerror" id="loginError"></div>
   </form>
-  <div class="hint">Acceso de prueba: <b>demo</b> / <b>demo123</b><br>Este inicio de sesión es demostrativo y no protege datos reales.</div>
+  <div class="hint">Acceso personal con tu correo y contraseña.</div>
  </div>
 </div>
 <div class="app hidden" id="app">
  <aside class="side">
   <div class="brand"><div class="logo">⌕</div><div><strong>Mi Consulta</strong><small>Panel de consulta</small></div></div>
   <div><div class="navlabel">MENÚ PRINCIPAL</div><nav class="nav"><button class="active" data-page="search">⌕ Buscar registros</button><button data-page="import">⇧ Importar archivo</button><button data-page="records">▤ Registros</button><button data-page="settings">⚙ Ajustes</button></nav></div>
-  <div class="sidebottom">● Prototipo activo<br>Sesión de demostración · Datos ficticios</div>
+  <div class="sidebottom">● Consulta personal<br>Acceso con tu cuenta</div>
  </aside>
  <main>
-  <header class="top"><div><div class="eyebrow">CENTRO DE CONSULTA · DEMO</div><h1 id="pageTitle">Buscar registros</h1><p class="sub" id="pageSubtitle">Encontrá coincidencias en los datos de prueba.</p></div><div class="profile"><div class="avatar">D</div><div class="ptext"><b>Usuario demo</b><small>Sesión local de prueba</small></div><button class="btn" id="logoutBtn">Salir</button></div></header>
+  <header class="top"><div><div class="eyebrow">CENTRO DE CONSULTA</div><h1 id="pageTitle">Buscar registros</h1><p class="sub" id="pageSubtitle">Buscá en tu base de datos por cualquiera de sus campos.</p></div><div class="profile"><div class="avatar">D</div><div class="ptext"><b id="sessionUser">Mi cuenta</b><small>Sesión autenticada</small></div><button class="btn" id="logoutBtn">Salir</button></div></header>
   <nav class="quicknav"><button class="active" data-page="search">⌕ Buscar</button><button data-page="import">⇧ Importar CSV</button><button data-page="records">▤ Registros</button><button data-page="settings">⚙ Configuración</button></nav>
   <section class="page active" id="page-search">
-   <div class="stats"><div class="stat"><span class="label">Registros guardados</span><strong id="statCount">0</strong><small>Datos ficticios</small></div><div class="stat"><span class="label">Coincidencias</span><strong id="statMatches">0</strong><small>Según tu búsqueda</small></div><div class="stat"><span class="label">Guardado</span><strong id="saveState" style="font-size:19px;color:var(--good)">Listo</strong><small id="saveHint">En este navegador</small></div></div>
-   <div class="card"><div class="cardhead"><h2>⌕ Búsqueda rápida</h2><span class="pill">BÚSQUEDA LOCAL</span></div><div class="searchgrid"><div class="field"><label for="query">Nombre, ID o dirección ficticia</label><input id="query" placeholder="Ej. Martina López o DEMO-001"></div><div class="field"><label for="filter">Buscar por</label><select id="filter"><option value="all">Todos los campos</option><option value="name">Nombre</option><option value="id">Identificador</option><option value="address">Dirección</option></select></div><button class="btn primary" id="searchBtn">Buscar registros</button></div><div class="toolbar"><button class="btn" id="clearBtn">Limpiar búsqueda</button><button class="btn" id="resetBtn">Restaurar ejemplos</button></div></div>
-   <div class="card"><div class="cardhead"><h2>Resultados</h2><span class="pill" id="resultCount">0 registros</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Sexo</th><th>Domicilio</th><th>Ciudad</th></tr></thead><tbody id="results"></tbody></table></div></div>
-   <div class="footer-note">Este prototipo no consulta fuentes oficiales ni debe contener datos reales.</div>
+   <div class="stats"><div class="stat"><span class="label">Registros cargados</span><strong id="statCount">0</strong><small>Resultados cargados, no el total de la base</small></div><div class="stat"><span class="label">Coincidencias</span><strong id="statMatches">0</strong><small>Según tu búsqueda</small></div><div class="stat"><span class="label">Conexión</span><strong id="saveState" style="font-size:19px;color:var(--good)">Supabase</strong><small id="saveHint">Consulta en línea</small></div></div>
+   <div class="card"><div class="cardhead"><h2>⌕ Búsqueda rápida</h2><span class="pill">BÚSQUEDA EN LÍNEA</span></div><div class="searchgrid"><div class="field"><label for="query">Texto para buscar</label><input id="query" placeholder="Escribí un apellido, DNI, domicilio…"></div><div class="field"><label for="filter">Buscar por</label><select id="filter"><option value="all">Todos los campos</option><option value="nombre">Nombre</option><option value="apellido">Apellido</option><option value="dni">DNI</option><option value="clase">Clase</option><option value="sexo">Sexo</option><option value="domicilio">Domicilio</option><option value="barrio_o_ciudad">Barrio o ciudad</option><option value="departamento">Departamento</option><option value="lugar">Lugar</option></select></div><button class="btn primary" id="searchBtn">Buscar registros</button></div><p id="searchStatus" class="muted" role="status" aria-live="polite">Elegí un campo y escribí el texto que querés buscar.</p><div class="toolbar"><button class="btn" id="clearBtn">Limpiar búsqueda</button><button class="btn" id="resetBtn" hidden>Restaurar ejemplos</button></div></div>
+   <div class="card"><div class="cardhead"><h2>Resultados</h2><span class="pill" id="resultCount">0 registros</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Clase</th><th>Sexo</th><th>Domicilio</th><th>Barrio o ciudad</th><th>Departamento</th><th>Lugar</th></tr></thead><tbody id="results"></tbody></table></div></div>
+   <div class="footer-note">Se muestran hasta 500 coincidencias por búsqueda. Elegí un campo o un texto más específico para afinar los resultados.</div>
   </section>
   <section class="page" id="page-import">
    <div class="card"><div class="cardhead"><h2>⇧ Importar CSV</h2><span class="pill">VISTA PREVIA</span></div><div class="uploadbox"><h3>Elegí un archivo CSV</h3><p>El archivo debe tener encabezados <code>id,name,address</code>. Solo se admiten IDs ficticios como DEMO-001. Primero revisás los datos y después confirmás la importación.</p><label class="btn primary" for="fileInput" style="display:inline-block">Seleccionar CSV</label><input id="fileInput" type="file" accept=".csv,text/csv" hidden><div class="fileinfo" id="fileInfo" aria-live="polite"></div><div id="importPreview" class="hidden" style="margin-top:18px;text-align:left"><h3>Vista previa</h3><p class="muted" id="importSummary"></p><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>ID</th><th>Dirección</th><th>Acción</th></tr></thead><tbody id="importRows"></tbody></table></div><div class="toolbar"><button class="btn primary" id="applyImport">Aplicar actualización</button><button class="btn" id="cancelImport">Cancelar</button></div></div></div></div>
    <div class="card"><div class="cardhead"><h2>▣ Copia de seguridad</h2></div><p class="muted">Descargá una copia JSON después de importar. Si cambiás de navegador o los datos desaparecen, podés restaurarla manualmente.</p><div class="toolbar"><button class="btn primary" id="exportBackup">Descargar copia de seguridad</button><label class="btn" for="backupInput" style="display:inline-block">Restaurar copia</label><input id="backupInput" type="file" accept=".json,application/json" hidden></div><div class="fileinfo" id="backupInfo" aria-live="polite"></div></div>
-   <div class="notice warn"><b>Importante:</b> los datos se guardan en el almacenamiento local de este navegador. No se sincronizan con otros dispositivos. Esta demo no tiene autenticación real ni almacenamiento seguro; no cargues información personal real.</div>
+   <div class="notice warn"><b>Importante:</b> los datos se guardan en el almacenamiento local de este navegador. No se sincronizan con otros dispositivos. La importación de esta pantalla es local y no actualiza Supabase.</div>
    <div class="toolbar"><button class="btn" id="backSearch">Volver a búsqueda</button></div>
   </section>
-  <section class="page" id="page-records"><div class="card"><div class="cardhead"><h2>▤ Todos los registros</h2><span class="pill">DATOS FICTICIOS</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Sexo</th><th>Domicilio</th><th>Ciudad</th></tr></thead><tbody id="allRecords"></tbody></table></div><div class="toolbar"><button class="btn primary" id="recordsSearch">Ir al buscador</button><button class="btn" id="recordsReset">Restaurar ejemplos</button></div></div></section>
-  <section class="page" id="page-settings"><div class="card"><h2>⚙ Configuración y seguridad</h2><div class="notice warn">El inicio de sesión es solo demostrativo. Los registros se guardan en este navegador y no se comparten con otros dispositivos.</div><p class="muted">Si publicás cambios en GitHub Pages y no aparecen, probá recargar la página con Ctrl + F5 en la computadora. No borres los datos del navegador antes de exportar una copia.</p></div></section>
+  <section class="page" id="page-records"><div class="card"><div class="cardhead"><h2>▤ Todos los registros</h2><span class="pill">REGISTROS CARGADOS</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Clase</th><th>Sexo</th><th>Domicilio</th><th>Barrio o ciudad</th><th>Departamento</th><th>Lugar</th></tr></thead><tbody id="allRecords"></tbody></table></div><div class="toolbar"><button class="btn primary" id="recordsSearch">Ir al buscador</button><button class="btn" id="recordsReset" hidden>Restaurar ejemplos</button></div></div></section>
+  <section class="page" id="page-settings"><div class="card"><h2>⚙ Configuración y seguridad</h2><div class="notice warn">El acceso utiliza tu cuenta. Las búsquedas consultan la base de datos en línea. La importación y restauración de copias de esta pantalla siguen siendo locales.</div><p class="muted">Si publicás cambios en GitHub Pages y no aparecen, probá recargar la página con Ctrl + F5 en la computadora. No borres los datos del navegador antes de exportar una copia.</p></div></section>
  </main>
 </div>
 <nav class="mobilebar hidden" id="mobilebar"><button class="active" data-page="search">⌕ Buscar</button><button data-page="import">⇧ Importar</button><button data-page="records">▤ Registros</button><button data-page="settings">⚙ Ajustes</button></nav>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script>
+const SUPABASE_URL = "https://hduhbkoebnczeqzqvsvm.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_V3LXLnVEVG-Rj32js-mPOA_HAfWM4Aw";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  console.log("Supabase conectado:", !!supabaseClient);
+
+</script>
 <script>
 (() => {
 "use strict";
@@ -65,6 +73,8 @@ const examples = [
 const $ = id => document.getElementById(id);
 let records = [];
 let pendingImport = [];
+const SEARCH_FIELDS = ["nombre", "apellido", "dni", "clase", "sexo", "domicilio", "barrio_o_ciudad", "departamento", "lugar"];
+let searchRequest = 0;
 function validRecord(r){return r && String(r.id||"").trim() && typeof r.name==="string" && r.name.trim() && typeof r.address==="string" && r.address.trim();}
 function cleanRecord(r){return {name:String(r.name).trim(),id:String(r.id).trim().toUpperCase(),address:String(r.address).trim(),status:"Ejemplo"};}
 function loadRecords(){
@@ -96,7 +106,7 @@ function saveRecords(){
 function showPage(page){
  document.querySelectorAll(".page").forEach(el=>el.classList.toggle("active",el.id==="page-"+page));
  document.querySelectorAll("[data-page]").forEach(el=>el.classList.toggle("active",el.dataset.page===page));
- const titles={search:["Buscar registros","Encontrá coincidencias en los datos de prueba."],import:["Importar archivo","Importá un CSV ficticio y revisá los cambios."],records:["Registros","Todos los registros ficticios guardados."],settings:["Ajustes","Opciones y límites de seguridad."]};
+ const titles={search:["Buscar registros","Buscá en tu base de datos por cualquiera de sus campos."],import:["Importar archivo","Importación local: no actualiza la base de datos en línea."],records:["Registros","Registros cargados en esta sesión; no es el total de la base."],settings:["Ajustes","Opciones y límites de seguridad."]};
  $("pageTitle").textContent=titles[page][0];$("pageSubtitle").textContent=titles[page][1];
 }
 document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
@@ -117,6 +127,7 @@ async function login(e){
     return;
   }
 
+  $("sessionUser").textContent = data.user?.email || "Mi cuenta";
   $("loginError").textContent = "";
   $("loginScreen").classList.add("hidden");
   $("app").classList.remove("hidden");
@@ -126,33 +137,16 @@ async function login(e){
 }
 
 $("loginForm").addEventListener("submit",login);
-$("logoutBtn").addEventListener("click",()=>{$("app").classList.add("hidden");$("mobilebar").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
+$("logoutBtn").addEventListener("click",async()=>{const {error}=await supabaseClient.auth.signOut();if(error){alert("No se pudo cerrar la sesión. Intentá de nuevo.");return;}++searchRequest;records=[];render();$("app").classList.add("hidden");$("mobilebar").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("password").value="";});
 function renderTable(bodyId,rows){
  const body=$(bodyId);body.replaceChildren();
- if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.className="empty";td.textContent="No hay registros para mostrar.";tr.append(td);body.append(tr);return;}
- rows.forEach(r=>{const tr=document.createElement("tr");[r.nombre,r.apellido,r.dni,r.sexo,r.domicilio,r.barrio_o_ciudad].forEach((value,i)=>{const td=document.createElement("td");td.textContent=value;if(i===0)td.style.fontWeight="700";if(i===3){const span=document.createElement("span");span.className="pill";span.textContent=value;td.replaceChildren(span);}tr.append(td);});body.append(tr);});
+ if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=9;td.className="empty";td.textContent="No hay registros para mostrar.";tr.append(td);body.append(tr);return;}
+ rows.forEach(r=>{const tr=document.createElement("tr");[r.nombre,r.apellido,r.dni,r.clase,r.sexo,r.domicilio,r.barrio_o_ciudad,r.departamento,r.lugar].forEach((value,i)=>{const td=document.createElement("td");td.textContent=value ?? "";if(i===0)td.style.fontWeight="700";if(i===4){const span=document.createElement("span");span.className="pill";span.textContent=value;td.replaceChildren(span);}tr.append(td);});body.append(tr);});
 }
 function render(){
- const q=$("query").value.trim().toLocaleLowerCase("es"),filter=$("filter").value;
- 
-const filtered = records.filter(r => {
-  const fields = [
-    r.nombre,
-    r.apellido,
-    r.dni,
-    r.sexo,
-   r.domicilio,
-r.barrio_o_ciudad,
-r.departamento,
-r.lugar
-  ];
-  return !q || fields.some(v =>
-    String(v ?? "").toLocaleLowerCase("es").includes(q)
-  );
-});
-
+ const filtered = records;
  renderTable("results",filtered);renderTable("allRecords",records);
- $("resultCount").textContent=filtered.length+" coincidencia(s)";$("statCount").textContent=records.length;$("statMatches").textContent=filtered.length;
+ $("resultCount").textContent=filtered.length+" coincidencia(s)"+(filtered.length===500?" · límite de 500":"");$("statCount").textContent=records.length;$("statMatches").textContent=filtered.length;
 }
  async function cargarConsultasSupabase() {
   const { data, error } = await supabaseClient
@@ -171,49 +165,32 @@ render();
 return data;
 }
 async function buscarEnSupabase() {
-  const texto = $("query").value.trim();
-
-  if (!texto) {
-    records = [];
-    render();
-    return;
-  }
-
-  const campos = [
-    "nombre", "apellido", "dni", "sexo",
-    "domicilio", "barrio_o_ciudad",
-    "departamento", "lugar"
-  ];
-
-  const termino = texto
-    .replace(/[%_\\]/g, "")
-    .replace(/[(),."]/g, "")
-    .trim();
-
-  if (!termino) return;
-
-  const condiciones = campos
-    .map(campo => `${campo}.ilike.%${termino}%`)
-    .join(",");
-
-  const { data, error } = await supabaseClient
-    .from("personas")
-    .select("*")
-    .or(condiciones)
-    .limit(500);
-
-  if (error) {
-    console.error("Error en la búsqueda:", error.message);
-    alert("No se pudo realizar la búsqueda.");
-    return;
-  }
-
-  records = data || [];
-  render();
+ const requestId = ++searchRequest;
+ const texto = $("query").value.trim();
+ const selected = $("filter").value;
+ const campos = SEARCH_FIELDS.includes(selected) ? [selected] : SEARCH_FIELDS;
+ if (!texto) { records=[]; render(); $("searchStatus").textContent="Escribí un texto para buscar en la base."; return; }
+ const termino = texto.replace(/[%_\\]/g, "").replace(/[(),."]/g, "").trim();
+ if (!termino) { $("searchStatus").textContent="Ingresá letras o números para buscar."; return; }
+ $("searchStatus").textContent="Buscando…";
+ try {
+  const condiciones = campos.map(campo => `${campo}.ilike.%${termino}%`).join(",");
+  const { data, error } = await supabaseClient.from("personas").select("*").or(condiciones).limit(500);
+  if (requestId !== searchRequest) return;
+  if (error) throw error;
+  records=data || []; render();
+  $("searchStatus").textContent=records.length===500 ? "Se alcanzó el límite de 500 resultados. Afiná tu búsqueda." : records.length+" coincidencia(s).";
+ } catch (error) {
+  if (requestId !== searchRequest) return;
+  records=[]; render();
+  $("searchStatus").textContent="No se pudo completar la búsqueda. Intentá con un campo específico o un texto más preciso.";
+  console.error("Error en la búsqueda:",error.message);
+ }
 }
- 
- $("searchBtn").addEventListener("click",buscarEnSupabase);$("query").addEventListener("keydown",e=>{if(e.key==="Enter")buscarEnSupabase();});$("filter").addEventListener("change",render);
-$("clearBtn").addEventListener("click",()=>{$("query").value="";$("filter").value="all";render();});
+$("searchBtn").addEventListener("click",buscarEnSupabase);
+$("query").addEventListener("keydown",e=>{if(e.key==="Enter")buscarEnSupabase();});
+$("filter").addEventListener("change",()=>{if($("query").value.trim())buscarEnSupabase();});
+$("clearBtn").addEventListener("click",()=>{++searchRequest;$("query").value="";$("filter").value="all";records=[];render();$("searchStatus").textContent="Escribí un texto para buscar en la base.";});
 function resetExamples(){if(!confirm("¿Querés reemplazar los registros actuales por los 3 ejemplos? Si tenés datos importados, primero descargá una copia."))return;records=examples.map(r=>({...r}));if(saveRecords())render();}
 $("resetBtn").addEventListener("click",resetExamples);$("recordsReset").addEventListener("click",resetExamples);
 $("recordsSearch").addEventListener("click",()=>showPage("search"));$("backSearch").addEventListener("click",()=>showPage("search"));
@@ -290,15 +267,14 @@ $("backupInput").addEventListener("change",async()=>{
  $("backupInput").value="";
 });
 render();
+supabaseClient.auth.getSession().then(async ({data,error})=>{
+ if(error || !data.session) return;
+ $("sessionUser").textContent=data.session.user.email || "Mi cuenta";
+ $("loginScreen").classList.add("hidden"); $("app").classList.remove("hidden"); $("mobilebar").classList.remove("hidden");
+ await cargarConsultasSupabase();
+}).catch(()=>{$("loginError").textContent="No se pudo verificar la sesión. Ingresá nuevamente.";});
 })();
 </script>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
- <script>
-const SUPABASE_URL = "https://hduhbkoebnczeqzqvsvm.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_V3LXLnVEVG-Rj32js-mPOA_HAfWM4Aw";
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  console.log("Supabase conectado:", !!supabaseClient);
 
-</script>
 </body>
 </html>
