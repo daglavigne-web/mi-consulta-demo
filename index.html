@@ -100,7 +100,7 @@ main{padding:28px clamp(16px,4vw,48px) 50px;max-width:1400px;width:100%;margin:a
   <nav class="quicknav"><button class="active" data-page="search">⌕ Buscar</button><button data-page="import">⇧ Importar CSV</button><button data-page="records">▤ Registros</button><button data-page="settings">⚙ Configuración</button></nav>
   <section class="page active" id="page-search">
    <div class="stats"><div class="stat"><span class="label">Registros cargados</span><strong id="statCount">0</strong><small>Resultados cargados, no el total de la base</small></div><div class="stat"><span class="label">Coincidencias</span><strong id="statMatches">0</strong><small>Según tu búsqueda</small></div><div class="stat"><span class="label">Conexión</span><strong id="saveState" style="font-size:19px;color:var(--good)">Supabase</strong><small id="saveHint">Consulta en línea</small></div></div>
-   <div class="card"><div class="cardhead"><h2>⌕ Búsqueda rápida</h2><span class="pill">BÚSQUEDA EN LÍNEA</span></div><div class="searchgrid"><div class="field"><label for="query">Texto para buscar</label><input id="query" placeholder="Escribí un apellido, DNI, domicilio…"></div><div class="field"><label for="filter">Buscar por</label><select id="filter"><option value="all">Todos los campos</option><option value="nombre">Nombre</option><option value="apellido">Apellido</option><option value="dni">DNI</option><option value="clase">Clase</option><option value="sexo">Sexo</option><option value="domicilio">Domicilio</option><option value="barrio_o_ciudad">Barrio o ciudad</option><option value="departamento">Departamento</option><option value="lugar">Lugar</option></select></div><button class="btn primary" id="searchBtn">Buscar registros</button></div><p id="searchStatus" class="muted" role="status" aria-live="polite">Elegí un campo y escribí el texto que querés buscar.</p><div class="toolbar"><button class="btn" id="clearBtn">Limpiar búsqueda</button><button class="btn" id="resetBtn" hidden>Restaurar ejemplos</button></div></div>
+   <div class="card"><div class="cardhead"><h2>⌕ Búsqueda rápida</h2><span class="pill">BÚSQUEDA EN LÍNEA</span></div><div class="searchgrid"><div class="field"><label for="query">Texto para buscar</label><input id="query" placeholder="Ej. Carla Mamani, David Angelo o un DNI"></div><div class="field"><label for="filter">Buscar por</label><select id="filter"><option value="all">Todos los campos</option><option value="persona">Nombre y apellido</option><option value="nombre">Nombre</option><option value="apellido">Apellido</option><option value="dni">DNI</option><option value="clase">Clase</option><option value="sexo">Sexo</option><option value="domicilio">Domicilio</option><option value="barrio_o_ciudad">Barrio o ciudad</option><option value="departamento">Departamento</option><option value="lugar">Lugar</option></select></div><button class="btn primary" id="searchBtn">Buscar registros</button></div><p id="searchStatus" class="muted" role="status" aria-live="polite">Podés combinar partes del nombre y apellido, en cualquier orden.</p><p class="muted" style="font-size:12px">Ejemplo: “Carla Mamani” encuentra ambos términos en el mismo registro, aunque tenga otros nombres o apellidos. No hace falta escribirlos completos.</p><div class="toolbar"><button class="btn" id="clearBtn">Limpiar búsqueda</button><button class="btn" id="resetBtn" hidden>Restaurar ejemplos</button></div></div>
    <div class="card"><div class="cardhead"><h2>Resultados</h2><span class="pill" id="resultCount">0 registros</span></div><div class="tablewrap"><table><thead><tr><th>Nombre</th><th>Apellido</th><th>DNI</th><th>Clase</th><th>Sexo</th><th>Domicilio</th><th>Barrio o ciudad</th><th>Departamento</th><th>Lugar</th></tr></thead><tbody id="results"></tbody></table></div></div>
    <div class="footer-note">Se muestran hasta 500 coincidencias por búsqueda. Elegí un campo o un texto más específico para afinar los resultados.</div>
   </section>
@@ -231,18 +231,28 @@ records = data || [];
 render();
 return data;
 }
+function prepararBusqueda(texto, selected) {
+ const campos = selected === "persona" ? ["nombre", "apellido"] : (SEARCH_FIELDS.includes(selected) ? [selected] : SEARCH_FIELDS);
+ // Treat a formatted DNI as one value. Otherwise, match each word independently.
+ const entrada = (selected === "dni" || selected === "all") && /^\d[\d.\s-]*$/.test(texto.trim())
+  ? texto.replace(/\D/g, "") : texto.normalize("NFC");
+ const palabras = [...new Set((entrada.toLocaleLowerCase("es").match(/[\p{L}\p{N}]+/gu) || []))];
+ if (!palabras.length) return {error:"Ingresá letras o números para buscar."};
+ if (palabras.length > 12 || texto.length > 200) return {error:"Usá hasta 12 palabras y 200 caracteres para buscar."};
+ const grupos = palabras.map(palabra => campos.map(campo => `${campo}.ilike.%${palabra}%`).join(","));
+ return {condiciones:grupos.length === 1 ? grupos[0] : `and(${grupos.map(grupo => `or(${grupo})`).join(",")})`};
+}
 async function buscarEnSupabase() {
  const requestId = ++searchRequest;
  if (!navigator.onLine) {records=[];render();$("searchStatus").textContent="Sin conexión. Conectate a internet para buscar datos actualizados.";return;}
  const texto = $("query").value.trim();
  const selected = $("filter").value;
- const campos = SEARCH_FIELDS.includes(selected) ? [selected] : SEARCH_FIELDS;
  if (!texto) { records=[]; render(); $("searchStatus").textContent="Escribí un texto para buscar en la base."; return; }
- const termino = texto.replace(/[%_\\]/g, "").replace(/[(),."]/g, "").trim();
- if (!termino) { $("searchStatus").textContent="Ingresá letras o números para buscar."; return; }
+ const busqueda = prepararBusqueda(texto, selected);
+ if (busqueda.error) {records=[];render();$("searchStatus").textContent=busqueda.error;return;}
  $("searchStatus").textContent="Buscando…";
  try {
-  const condiciones = campos.map(campo => `${campo}.ilike.%${termino}%`).join(",");
+  const condiciones = busqueda.condiciones;
   const { data, error } = await supabaseClient.from("personas").select("*").or(condiciones).limit(500);
   if (requestId !== searchRequest) return;
   if (error) throw error;
