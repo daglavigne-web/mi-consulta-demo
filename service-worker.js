@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-consulta-shell-v2';
+const CACHE_NAME = 'mi-consulta-shell-v3';
 const ROOT = new URL('./', self.location.href);
 const SHELL = ['index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'].map(path => new URL(path, ROOT).href);
 self.addEventListener('install', event => {
